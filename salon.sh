@@ -55,7 +55,7 @@ SERVICE_MENU() {
 
     # get service id info
     SERVICE_INFO=$($PSQL "SELECT name FROM services WHERE service_id = $SERVICE_ID_SELECTED")
-    SERVICE_INFO_FORMATTED=$(echo $SERVICE_INFO | sed 's/ |/"/')
+    SERVICE_INFO_FORMATTED=$(echo $SERVICE_INFO)
 
     # ask the user what time they would like their appointment scheduled
     echo -e "\nWhat time would you like your "$SERVICE_INFO_FORMATTED"?"
@@ -69,19 +69,15 @@ SERVICE_MENU() {
     # insert the data into appointments table
     INSERT_APPOINTMENT_RESULT=$($PSQL "INSERT INTO appointments(service_id, customer_id, time) VALUES('$SERVICE_ID_SELECTED','$CUSTOMER_ID','$SERVICE_TIME')")
 
-    echo -e "\nI have put you down for the $SERVICE_INFO_FORMATTED, $(echo $CUSTOMER_NAME | sed -r 's/^ *| *$//g')."
+    # display a message that tells the user what service and time they made an appointment
+    echo -e "\nI have put you down for a $SERVICE_INFO_FORMATTED at $SERVICE_TIME, $(echo $CUSTOMER_NAME)."
   fi
 
-}
-
-SCHEDULE_MENU() {
-  echo "Schedule menu"
 }
 
 EXIT () {
   echo -e "\nThank you for stopping in~!"
 }
 
-#MAIN_MENU
-
 SERVICE_MENU
+EXIT
